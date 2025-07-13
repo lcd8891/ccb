@@ -4,24 +4,13 @@ std::string window_ui_xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\
 <interface>\
   <requires lib=\"gtk+\" version=\"3.24\"/>\
   <object class=\"GtkTextBuffer\" id=\"tb1\">\
-    <property name=\"text\" translatable=\"yes\">&gt; Compiling &lt;Component filename&gt;\
-\
-Success!\
-\
-&gt; Compiling &lt;Otput filename&gt;\
-\
-ERROR : *.cpp\
-		some_function(nullptr);\
-						^~~~~\
-		couldn't use nullptr\
-\
-Compilation terminated!</property>\
+    <property name=\"text\" translatable=\"false\">Terminal</property>\
   </object>\
   <object class=\"GtkWindow\" id=\"win3\">\
     <property name=\"can-focus\">False</property>\
     <property name=\"title\" translatable=\"yes\">Build Window</property>\
-    <property name=\"resizable\">False</property>\
-    <property name=\"default-width\">600</property>\
+    <property name=\"resizable\">True</property>\
+    <property name=\"default-width\">1000</property>\
     <property name=\"default-height\">600</property>\
     <child>\
       <object class=\"GtkBox\">\
@@ -34,13 +23,21 @@ Compilation terminated!</property>\
         <property name=\"orientation\">vertical</property>\
         <property name=\"spacing\">15</property>\
         <child>\
-          <object class=\"GtkTextView\" id=\"tv_bt\">\
+          <object class=\"GtkScrolledWindow\">\
             <property name=\"visible\">True</property>\
             <property name=\"can-focus\">True</property>\
-            <property name=\"editable\">False</property>\
-            <property name=\"buffer\">tb1</property>\
-            <property name=\"input-purpose\">terminal</property>\
-            <property name=\"monospace\">True</property>\
+            <property name=\"shadow-type\">in</property>\
+            <child>\
+              <object class=\"GtkTextView\" id=\"tv_bt\">\
+                <property name=\"visible\">True</property>\
+                <property name=\"can-focus\">True</property>\
+                <property name=\"editable\">False</property>\
+                <property name=\"cursor-visible\">False</property>\
+                <property name=\"buffer\">tb1</property>\
+                <property name=\"input-purpose\">terminal</property>\
+                <property name=\"monospace\">True</property>\
+              </object>\
+            </child>\
           </object>\
           <packing>\
             <property name=\"expand\">True</property>\
