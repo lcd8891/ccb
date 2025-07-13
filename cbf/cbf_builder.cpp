@@ -155,9 +155,9 @@ namespace ccb{
             ss << "g++ " << cbf->build_info.main_file << " ";
             ss << BP::getAdditionalSourceFiles(cbf->build_info);
             for(Component& c : cbf->compontents){
-                if(!std::filesystem::exists(BP::getBuiledComponent(cbf,c))){
+                /*if(!std::filesystem::exists(BP::getBuiledComponent(cbf,c))){
                     throw std::string("builded component "+BP::getBuiledComponent(cbf,c)+" doesn't builded!");
-                }
+                }*/
                 ss << BP::getOutputComponent(cbf->alt_path, c) << " ";
             }
             ss << "-o " << BP::getOuputProgram(cbf) + " ";
