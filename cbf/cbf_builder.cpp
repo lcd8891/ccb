@@ -42,14 +42,18 @@ namespace BP{
     }
     std::string getInputComponent(CBF_FILE *cbf,Component c){
         std::string out;
+        out+='\"';
         out+=c.filename;
+        out+='\"';
         return out;
     }
     std::string getOutputComponent(std::string alt_path, Component c,std::string wokspace_folder = ""){
         std::string out;
+        out+='\"';
         out+=alt_path;
         out+=getfilenamewithoutmime(c.filename);
         out+=".o";
+        out+='\"';
         return out;
     }
     std::string parseLibrariesC(CBF_FILE *cbf,Component c){
@@ -61,7 +65,7 @@ namespace BP{
             }
             for(std::string link : l.links){
                 if(isPath(link)){
-                    out+="-L"+link+' ';
+                    out+="-L\""+link+"\" ";
                 }else{
                     out+="-l"+link+' ';
                 }
@@ -78,7 +82,7 @@ namespace BP{
                 }
                 for(std::string link : l.links){
                     if(isPath(link)){
-                        out+="-L"+link+' ';
+                        out+="-L\""+link+"\" ";
                     }else{
                         out+="-l"+link+' ';
                     }
@@ -103,10 +107,12 @@ namespace BP{
     }
     std::string getOuputProgram(CBF_FILE *cbf){
         std::string s;
+        s+='\"';
         s+=cbf->build_info.output_file;
         if(cbf->build_info.add_format){
             s+=EXECUTABLE_FORMAT;
         }
+        s+='\"';
         return s;
     }
     void checkForAltpath(std::string workspace_folder,std::string altpath){
@@ -116,13 +122,13 @@ namespace BP{
     std::string getAdditionalSourceFiles(BUILD_INFO &bf){
         std::string s;
         for(std::string a : bf.additional_files){
-            s+=a+' ';
+            s+="\""+a+"\" ";
         }
         return s;
     }
     std::string getBuiledComponent(CBF_FILE *cbf,const Component &c){
         std::string s;
-        s = cbf->build_info.workspace_folder+PATH_DIVIDER+cbf->alt_path+getfilenamewithoutmime(c.filename)+".o";
+        s = '\"'+cbf->build_info.workspace_folder+PATH_DIVIDER+cbf->alt_path+getfilenamewithoutmime(c.filename)+".o"+'\"';
         return s;
     }
 }
@@ -132,12 +138,12 @@ namespace ccb{
         void build_component(CBF_FILE *cbf, CID id){
             
             std::stringstream ss;
-            ss << "cd " << cbf->build_info.workspace_folder << " && ";
+            ss << "cd \"" << cbf->build_info.workspace_folder << "\" && ";
             ss << "g++ " << cbf->build_info.additional_arguments << ' ';
             if(!std::filesystem::exists(cbf->compontents[id].filename)){
                 throw std::string("component source file doesn't exists");
             }
-            ss << "-c " << BP::getInputComponent(cbf,cbf->compontents[id]) << ' ';
+            ss << "-c " << BP::getInputComponent(cbf,cbf->compontents[id]) << " ";
             ss << "-o " << BP::getOutputComponent(cbf->alt_path,cbf->compontents[id],cbf->build_info.workspace_folder) << ' ';
             ss << BP::parseLibrariesC(cbf,cbf->compontents[id]);
 
@@ -145,12 +151,12 @@ namespace ccb{
         }
         void build(CBF_FILE* cbf){
             std::stringstream ss;
-            ss << "cd " << cbf->build_info.workspace_folder << " && ";
+            ss << "cd \"" << cbf->build_info.workspace_folder << "\" && ";
             ss << "g++ " << cbf->build_info.main_file << " ";
             ss << BP::getAdditionalSourceFiles(cbf->build_info);
             for(Component& c : cbf->compontents){
                 if(!std::filesystem::exists(BP::getBuiledComponent(cbf,c))){
-                    throw std::string("builded component "+c.filename+" doesn't builded!");
+                    throw std::string("builded component "+BP::getBuiledComponent(cbf,c)+" doesn't builded!");
                 }
                 ss << BP::getOutputComponent(cbf->alt_path, c) << " ";
             }
