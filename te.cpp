@@ -59,8 +59,12 @@ void executeInTerminal(std::string cmd){
             ss+=buffer;
             sbi::updateTerminal(ss);
         }
+        #ifdef __linux__
         int status = pclose(pipe);
         int exit_code = WEXITSTATUS(status);
+        #elif _WIN32
+        int exit_code = pclose(pipe);
+        #endif
         ss+="\nProgram returned: "+std::to_string(exit_code);
         sbi::updateTerminal(ss);
         if(exit_code == 0){

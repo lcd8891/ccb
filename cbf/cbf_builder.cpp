@@ -122,7 +122,7 @@ namespace BP{
     std::string getAdditionalSourceFiles(BUILD_INFO &bf){
         std::string s;
         for(std::string a : bf.additional_files){
-            s+=a+' ';
+            s+="\""+a+"\" ";
         }
         return s;
     }
@@ -143,7 +143,7 @@ namespace ccb{
             if(!std::filesystem::exists(cbf->compontents[id].filename)){
                 throw std::string("component source file doesn't exists");
             }
-            ss << "-c " << BP::getInputComponent(cbf,cbf->compontents[id]) << ' ';
+            ss << "-c " << BP::getInputComponent(cbf,cbf->compontents[id]) << " ";
             ss << "-o " << BP::getOutputComponent(cbf->alt_path,cbf->compontents[id],cbf->build_info.workspace_folder) << ' ';
             ss << BP::parseLibrariesC(cbf,cbf->compontents[id]);
 
