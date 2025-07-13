@@ -152,7 +152,7 @@ namespace ccb{
         void build(CBF_FILE* cbf){
             std::stringstream ss;
             ss << "cd \"" << cbf->build_info.workspace_folder << "\" && ";
-            ss << "g++ " << cbf->build_info.main_file << " ";
+            ss << "g++ \"" << cbf->build_info.main_file << "\" ";
             ss << BP::getAdditionalSourceFiles(cbf->build_info);
             for(Component& c : cbf->compontents){
                 /*if(!std::filesystem::exists(BP::getBuiledComponent(cbf,c))){
